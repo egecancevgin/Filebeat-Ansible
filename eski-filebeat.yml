@@ -1,0 +1,27 @@
+---
+- name: Filebeat Installation                           # Playbook ismini yazıyoruz
+  hosts: all                                            # hosts kısmına all diyoruz, çalışmazsa sadece localhost
+  become: yes
+  vars:                                                 # Filebeat'in indirilmesi için gerekn rpm linki
+    filebeat_rpm_url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.10.0-x86_64.rpm"
+    filebeat_config_template: "filebeat.yml.j2"         # Jinja template dosyasının path'i
+    filebeat_config_path: "/etc/filebeat/filebeat.yml"  # Filebeat konfigürasyon dosyasının path'i
+    elasticsearch_hosts: "11.32.151.242"                # Buraya IP adreslerini yazınız (Random yazılmıştır) 
+    elasticsearch_username: "..."                       # Buraya elastic kullanıcı adını yazınız
+    elasticsearch_password: "..."                       # Buraya şifreyi yazınız
+
+  tasks:                                                # Görevleri buraya girelim
+    - name: Filebeat RPM dosyasını /opt dizin download  # Görevin ismi
+      get_url:                                          
+        url: "{{ filebeat_rpm_url }}"
+        dest: "/opt/filebeat.rpm"
+
+    - name: Filebeat paketini kur                       # Yum ile kurulum yapılması
+      yum:
+        name: "/opt/filebeat.rpm"
+        state: present
+
+    - name: Filebeat konfigürasyon dosyasını düzenle ve yerleştir # Konfigürasyon dosyası ve kaynak dosyasını argüman verelim
+      template:
+        src: "{{ filebeat_config_template }}"
+        dest: "{{ filebeat_config_path }}"
