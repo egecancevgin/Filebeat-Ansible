@@ -9,6 +9,7 @@
     elasticsearch_hosts: "11.32.151.242"                # Buraya IP adreslerini yazınız (Random yazılmıştır) 
     elasticsearch_username: "..."                       # Buraya elastic kullanıcı adını yazınız
     elasticsearch_password: "..."                       # Buraya şifreyi yazınız
+    log_input: "/home/egecan/"
 
   tasks:                                                # Görevleri buraya girelim
     - name: Filebeat RPM dosyasını /opt dizin download  # Görevin ismi
